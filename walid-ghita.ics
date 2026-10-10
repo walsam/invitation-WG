@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Walid and Ghita//Invitation//AR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:walid-ghita-20261024@invitation
+DTSTAMP:20260101T000000Z
+DTSTART:20261024T170000Z
+DTEND:20261024T210000Z
+SUMMARY:عقد قران وليد وغيثة — Walid & Ghita
+LOCATION:Marrakech\, Morocco
+URL:https://maps.app.goo.gl/GkqDf6CoxdtT6k8R9
+DESCRIPTION:بكل الحب والفرح، نرحب بكم في حفل عق
+ د قران وليد وغيثة — You are warmly invited to celebrate wi
+ th Walid and Ghita.
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:عقد قران وليد وغيثة غداً
+END:VALARM
+END:VEVENT
+END:VCALENDAR
