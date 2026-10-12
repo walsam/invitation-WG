@@ -88,7 +88,46 @@ door.addEventListener("keydown", (event) => {
 replayButton.addEventListener("click", closeDoor);
 
 /* ───────────── Writing, from top to bottom ───────────── */
-const revealItems = [...card.querySelectorAll("[data-reveal]")];
+const revealItems = [...card.querySelectorAll(".card__content > [data-reveal]")];
+const bismillah = card.querySelector(".card__content > .bismillah");
+const verse = card.querySelector(".card__content > .verse");
+
+/* The bismillah and the verse first write themselves large in the middle of the card,
+   then glide up into their place at their small size, and only then is the rest written. */
+const intro = document.createElement("div");
+const introBlock = document.createElement("div");
+intro.className = "verse-intro";
+intro.setAttribute("aria-hidden", "true");
+introBlock.className = "verse-intro__block";
+introBlock.append(bismillah.cloneNode(true), verse.cloneNode(true));
+intro.append(introBlock);
+card.querySelector(".card__content").append(intro);
+
+function playVerseIntro() {
+  const introBismillah = introBlock.querySelector(".bismillah");
+  const introWords = [...introBlock.querySelectorAll(".w")];
+  const wordsStart = 300 + TIMING.wipe;
+  const settle = wordsStart + introWords.length * TIMING.word + 1500; // read time before it moves
+  intro.classList.add("is-on");
+  introBismillah.style.transitionDelay = "300ms";
+  introWords.forEach((word, i) => { word.style.transitionDelay = `${wordsStart + i * TIMING.word}ms`; });
+  requestAnimationFrame(() => {
+    introBismillah.classList.add("is-shown");
+    introWords.forEach((word) => word.classList.add("is-shown"));
+  });
+  later(() => {
+    const first = introBlock.getBoundingClientRect();
+    const top = bismillah.getBoundingClientRect();
+    const bottom = verse.getBoundingClientRect();
+    const last = { left: Math.min(top.left, bottom.left), right: Math.max(top.right, bottom.right), top: top.top, bottom: bottom.bottom };
+    const scale = (last.bottom - last.top) / first.height;
+    const dx = (last.left + last.right - first.left - first.right) / 2;
+    const dy = (last.top + last.bottom - first.top - first.bottom) / 2;
+    introBlock.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+    intro.classList.add("is-leaving");
+  }, settle);
+  return { handoff: settle + 1000, next: settle + 1700 };
+}
 
 async function writeInvitation() {
   try {
@@ -101,8 +140,24 @@ async function writeInvitation() {
   body.classList.add("is-writing");
 
   let t = 0;
+  let handoff = null;
+  if (!reducedMotion) {
+    const intro = playVerseIntro();
+    handoff = intro.handoff;
+    t = intro.next;
+  }
   for (const item of revealItems) {
     const kind = item.dataset.reveal;
+    if (handoff !== null && (item === bismillah || item === verse)) {
+      // Already written in the middle: the small copies simply fade in as the large ones arrive.
+      item.classList.add("is-handoff");
+      item.style.setProperty("--handoff-delay", `${handoff}ms`);
+      getComputedStyle(item).opacity; // commit the hidden state so the later fade-in really transitions
+      const targets = item === verse ? [...item.querySelectorAll(".w")] : [item];
+      if (item === verse) targets.forEach((el) => { el.style.transitionDelay = `${handoff}ms`; });
+      requestAnimationFrame(() => targets.forEach((el) => el.classList.add("is-shown")));
+      continue;
+    }
     if (kind === "pen") {
       t = writeMonogram(item, t);
     } else if (kind === "words") {
@@ -145,6 +200,7 @@ function finishWriting() {
   body.classList.add("is-writing", "is-written");
   card.querySelectorAll(".pen").forEach((pen) => { pen.style.visibility = "visible"; pen.style.strokeDashoffset = "0"; });
   card.querySelectorAll("[data-reveal], .w").forEach((el) => el.classList.add("is-shown"));
+  intro.classList.remove("is-on", "is-leaving");
   // Transitions still waiting out their delay ignore new delay/duration values, so jump them to the end.
   if (card.getAnimations) card.getAnimations({ subtree: true }).forEach((animation) => { try { animation.finish(); } catch { /* infinite animations cannot finish */ } });
 }
@@ -153,7 +209,10 @@ card.addEventListener("click", (event) => {
 });
 
 function resetWriting() {
-  card.querySelectorAll(".is-shown").forEach((el) => el.classList.remove("is-shown"));
+  card.querySelectorAll(".is-shown, .is-handoff").forEach((el) => el.classList.remove("is-shown", "is-handoff"));
+  intro.classList.remove("is-on", "is-leaving");
+  introBlock.style.transform = "";
+  card.querySelectorAll("[style*='--handoff-delay']").forEach((el) => el.style.removeProperty("--handoff-delay"));
   card.querySelectorAll("[data-reveal], .w").forEach((el) => { el.style.transitionDelay = ""; });
   card.querySelectorAll(".pen").forEach((pen) => {
     pen.style.transition = "none";

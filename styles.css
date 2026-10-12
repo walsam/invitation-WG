@@ -169,20 +169,49 @@ img { display: block; }
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  font-size: calc(var(--u) * 3.7);
+  font-size: max(9.5px, calc(var(--u) * 2.3));
   line-height: 1.6;
   margin: 0;
 }
 
 .verse {
   color: var(--cream);
-  font-size: calc(var(--u) * 4.1);
+  font-size: max(10px, calc(var(--u) * 2.46));
   line-height: 1.9;
   margin: 0;
   max-width: 100%;
   text-wrap: balance;
 }
 .verse__marker { color: var(--gold-300); }
+
+.verse-intro {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  opacity: 0;
+  padding: 0 calc(var(--u) * 3.4);
+  pointer-events: none;
+  position: absolute;
+  transition: opacity .5s ease;
+  visibility: hidden;
+}
+.verse-intro.is-on { opacity: 1; visibility: visible; }
+.verse-intro.is-leaving { opacity: 0; transition: opacity .7s ease .9s, visibility 0s linear 1.6s; visibility: hidden; }
+.verse-intro__block {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 1.4);
+  text-align: center;
+  transform-origin: 50% 50%;
+  transition: transform 1.6s cubic-bezier(.55, .05, .25, 1);
+}
+.verse-intro .bismillah { font-size: calc(var(--u) * 4); }
+.verse-intro .verse { font-size: calc(var(--u) * 4.6); line-height: 1.9; }
+/* The small bismillah and verse fade in under the arriving large copy. */
+.bismillah.is-handoff { clip-path: none; opacity: 0; transition: none; }
+.bismillah.is-handoff.is-shown { opacity: 1; transition: opacity .7s ease var(--handoff-delay, 0s); }
 
 .flourish { flex: none; height: auto; width: calc(var(--u) * 30); }
 
@@ -255,20 +284,20 @@ img { display: block; }
 }
 .date__cell--main span { color: var(--cream); font-size: calc(var(--u) * 3.3); line-height: 1.2; }
 
-.countdown { align-items: flex-start; display: flex; gap: calc(var(--u) * 1.2); justify-content: center; }
+.countdown { align-items: flex-start; display: flex; gap: calc(var(--u) * 1.1); justify-content: center; }
 .countdown div {
   align-items: center;
   background: linear-gradient(180deg, rgba(110, 22, 32, .45), rgba(20, 3, 6, .5));
   border: 1px solid rgba(228, 187, 137, .5);
-  border-radius: 50% 50% calc(var(--u) * 1.2) calc(var(--u) * 1.2) / calc(var(--u) * 5) calc(var(--u) * 5) calc(var(--u) * 1.2) calc(var(--u) * 1.2);
+  border-radius: 50% 50% calc(var(--u) * 1.1) calc(var(--u) * 1.1) / calc(var(--u) * 4.5) calc(var(--u) * 4.5) calc(var(--u) * 1.1) calc(var(--u) * 1.1);
   display: flex;
   flex-direction: column;
-  min-width: calc(var(--u) * 13.5);
-  padding: calc(var(--u) * 2) calc(var(--u) * .8) calc(var(--u) * 1);
+  min-width: calc(var(--u) * 12.2);
+  padding: calc(var(--u) * 1.8) calc(var(--u) * .7) calc(var(--u) * .9);
 }
-.countdown strong { color: var(--gold-200); font-family: var(--latin); font-size: calc(var(--u) * 5.4); font-variant-numeric: tabular-nums lining-nums; font-weight: 600; line-height: 1; }
-.countdown span { color: rgba(251, 243, 228, .82); font-size: calc(var(--u) * 3); line-height: 1.3; }
-.countdown i { color: var(--gold-400); font-family: var(--latin); font-size: calc(var(--u) * 4.4); font-style: normal; line-height: 1; padding-top: calc(var(--u) * 2.2); }
+.countdown strong { color: var(--gold-200); font-family: var(--latin); font-size: calc(var(--u) * 4.9); font-variant-numeric: tabular-nums lining-nums; font-weight: 600; line-height: 1; }
+.countdown span { color: rgba(251, 243, 228, .82); font-size: calc(var(--u) * 2.7); line-height: 1.3; }
+.countdown i { color: var(--gold-400); font-family: var(--latin); font-size: calc(var(--u) * 4); font-style: normal; line-height: 1; padding-top: calc(var(--u) * 2); }
 .countdown .event-day { color: var(--gold-200); font-size: calc(var(--u) * 4); margin: 0; }
 
 .actions { display: flex; gap: calc(var(--u) * 2.4); justify-content: center; width: 100%; }
@@ -510,7 +539,7 @@ img { display: block; }
   .card__content > * { order: 3; }
   .monogram, .bismillah, .verse, .flourish { order: 1; }
   .card__content::after { content: ""; flex-basis: 100%; order: 2; width: 0; }
-  .verse { font-size: max(12px, calc(var(--u) * 4.1)); max-width: 44%; }
+  .verse { font-size: max(10px, calc(var(--u) * 2.46)); max-width: 44%; }
   .date, .actions { width: 44%; }
   .monogram { height: calc(var(--u) * 19); width: calc(var(--u) * 19); }
   .welcome { font-size: calc(var(--u) * 4.4); }
