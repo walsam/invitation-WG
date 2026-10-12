@@ -6,9 +6,9 @@
    freesound.org/s/182730, CC BY 4.0 (creativecommons.org/licenses/by/4.0) — trimmed, filtered, looped, normalised. */
 const InviteAudio = (() => {
   const FILES = {
-    knock: "assets/audio/knock.m4a",
-    creak: "assets/audio/creak.m4a",
-    music: "assets/audio/music.m4a",
+    knock: "assets/audio/knock.m4a?v=b3f114b9",
+    creak: "assets/audio/creak.m4a?v=17269bae",
+    music: "assets/audio/music.m4a?v=dcc89213",
   };
   const MUSIC_VOLUME = 0.4;
   const STORAGE_KEY = "invitation-sound-muted";
