@@ -14,6 +14,7 @@ const wall = document.querySelector("#wall");
 const door = document.querySelector("#door");
 const card = document.querySelector("#card");
 const replayButton = document.querySelector("#replay");
+const soundButton = document.querySelector("#sound");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const TIMING = reducedMotion
@@ -59,6 +60,11 @@ function openDoor() {
   body.classList.add("is-knocking");
   door.setAttribute("aria-expanded", "true");
   if (!reducedMotion && navigator.vibrate) navigator.vibrate([28, 420, 28]);
+  InviteAudio.unlock();
+  InviteAudio.play("knock");
+  InviteAudio.prefetchMusic();
+  later(() => InviteAudio.play("creak", 0.5), TIMING.knock); // full voice just as the leaves start to swing
+  later(() => InviteAudio.startMusic(), TIMING.knock + TIMING.open - 900);
   later(() => body.classList.add("is-opening"), TIMING.knock);
   later(() => {
     body.classList.add("is-open");
@@ -72,6 +78,7 @@ function closeDoor() {
   timers.forEach(clearTimeout);
   timers = [];
   body.classList.remove("no-motion", "is-knocking", "is-opening", "is-open", "is-writing", "is-written");
+  InviteAudio.stopMusic();
   card.inert = true;
   door.setAttribute("aria-expanded", "false");
   later(resetWriting, 1200);
@@ -86,6 +93,20 @@ door.addEventListener("keydown", (event) => {
   }
 });
 replayButton.addEventListener("click", closeDoor);
+
+/* Sound on/off, remembered on this phone. */
+function showSoundState() {
+  soundButton.setAttribute("aria-pressed", String(InviteAudio.muted));
+  soundButton.setAttribute("aria-label", InviteAudio.muted ? "تشغيل الصوت" : "إيقاف الصوت");
+  soundButton.title = soundButton.getAttribute("aria-label");
+}
+soundButton.addEventListener("click", () => {
+  InviteAudio.unlock();
+  InviteAudio.setMuted(!InviteAudio.muted);
+  showSoundState();
+  if (!InviteAudio.muted && body.classList.contains("is-opening")) InviteAudio.startMusic();
+});
+showSoundState();
 
 /* ───────────── Writing, from top to bottom ───────────── */
 const revealItems = [...card.querySelectorAll(".card__content > [data-reveal]")];

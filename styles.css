@@ -498,6 +498,26 @@ img { display: block; }
 .replay svg { fill: none; height: 1.15rem; stroke: var(--gold-300); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 1.15rem; }
 .is-written .replay { opacity: 1; pointer-events: auto; transition: opacity .6s ease; visibility: visible; }
 
+.sound {
+  align-items: center;
+  background: rgba(28, 7, 9, .82);
+  border: 1px solid rgba(228, 187, 137, .65);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 2.75rem;
+  justify-content: center;
+  position: absolute;
+  right: max(.9rem, env(safe-area-inset-right));
+  top: max(.9rem, env(safe-area-inset-top));
+  width: 2.75rem;
+  z-index: 6;
+}
+.sound svg { fill: none; height: 1.2rem; stroke: var(--gold-300); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: 1.2rem; }
+.sound .sound__off, .sound[aria-pressed="true"] .sound__waves { display: none; }
+.sound[aria-pressed="true"] .sound__off { display: block; }
+.sound:focus-visible { outline: 2px solid var(--gold-200); outline-offset: 3px; }
+
 /* Wide screens: the card stands centred on the stage with a chandelier on each side. */
 @media (min-aspect-ratio: 5 / 4) {
   .chandelier--centre { display: none; }
