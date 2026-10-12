@@ -122,41 +122,52 @@ img { display: block; }
     linear-gradient(180deg, rgba(16, 2, 4, .1), rgba(16, 2, 4, .45)),
     url("assets/silk.webp") center / cover;
   filter: brightness(1.32) saturate(1.08);
-  inset: 7% 6% 7% 7%;
+  inset: 4.5%;
   position: absolute;
 }
-.card__carpet {
+/* The carpet keeps a slim border: a wider arch window (left/right 5%, apex 7%, springing 32.8%, bottom 92.5%)
+   is cut out of carpet-arch.webp with a mask, and a thin gold fillet follows the new edge. */
+.card__frame {
   filter: drop-shadow(0 1.4rem 2.6rem rgba(0, 0, 0, .6));
-  height: 100%;
   inset: 0;
   position: absolute;
-  width: 100%;
   will-change: transform; /* keeps the filtered shadow cached while the card repaints (WebKit) */
 }
+.card__carpet {
+  height: 100%;
+  inset: 0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' d='M0 0H100V100H0Z M5 92.5V32.8A45 25.8 0 0 1 95 32.8V92.5Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' d='M0 0H100V100H0Z M5 92.5V32.8A45 25.8 0 0 1 95 32.8V92.5Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  position: absolute;
+  width: 100%;
+}
+.card__rim { fill: none; height: 100%; inset: 0; overflow: visible; position: absolute; width: 100%; }
+.card__rim path { stroke: var(--gold-400); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.card__rim path:first-child { stroke: rgba(246, 223, 170, .55); stroke-width: .8; }
 .card__corner {
-  bottom: 10%;
+  bottom: 8.1%;
   opacity: 0;
   position: absolute;
   transition: opacity 1.2s ease;
   width: calc(var(--u) * 14);
 }
-.card__corner--left { left: 10.4%; }
-.card__corner--right { right: 8.5%; }
+.card__corner--left { left: 5.6%; }
+.card__corner--right { right: 5.6%; }
 .is-open .card__corner { opacity: .9; }
 
-/* The arch window of carpet-arch.webp: left 9.647%, right 92.239%, apex 9.384%, bottom 90.381%. */
+/* The arch window (see .card__carpet): left 5%, right 5%, apex 7%, bottom 92.5%. */
 .card__content {
   align-items: center;
-  bottom: 9.619%;
+  bottom: 7.5%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  left: 9.647%;
+  left: 5%;
   padding: calc(var(--u) * 2.2) calc(var(--u) * 3.4) calc(var(--u) * 3.2);
   position: absolute;
-  right: 7.761%;
+  right: 5%;
   text-align: center;
-  top: 9.384%;
+  top: 7%;
 }
 
 .monogram { color: var(--gold-300); filter: drop-shadow(0 0 calc(var(--u) * 1.6) rgba(228, 187, 137, .25)); flex: none; height: calc(var(--u) * 21); width: calc(var(--u) * 21); }
@@ -521,7 +532,7 @@ img { display: block; }
     height: calc(var(--svh) * 92);
     width: min(calc(var(--u) * 200), calc(100vw - 2 * (max(.9rem, env(safe-area-inset-left), env(safe-area-inset-right)) + 3.25rem)));
   }
-  .card__carpet, .card__corner { display: none; }
+  .card__frame, .card__corner { display: none; }
   .card__silk {
     border: 1px solid var(--gold-400);
     border-radius: calc(var(--u) * 4);
