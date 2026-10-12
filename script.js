@@ -1,4 +1,4 @@
-const EVENT_START = new Date("2026-10-24T18:00:00+01:00"); // Marrakech, UTC+1
+const EVENT_START = new Date("2026-10-24T18:00:00+00:00"); // 18:00 in Morocco, which is on GMT (+00:00)
 
 // Outer silhouette of door-frame.webp, in % of the door canvas (same polygon as .door__opening).
 const DOOR_SILHOUETTE = [
