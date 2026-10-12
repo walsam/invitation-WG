@@ -34,12 +34,23 @@ def verse():
     spans = "".join(f'<span class="w">{w}</span> ' for w in words[:-1])
     return spans + f'<span class="w">{words[-1]} <span class="verse__marker">{marker}</span></span>'
 
+def thuluth(file, css_class, gradient_id):
+    """Diwan Thuluth outlines (built by tools/build-names.py), filled with an embossed-gold gradient."""
+    svg = (ROOT / "assets" / file).read_text()
+    view_box = re.search(r'viewBox="([^"]+)"', svg).group(1)
+    body = re.search(r"<g transform=\"scale\(1 -1\)\">.*</g>", svg, re.S).group(0)
+    return (f'<svg class="{css_class}" viewBox="{view_box}" aria-hidden="true" focusable="false">'
+            f'<defs><linearGradient id="{gradient_id}" x1="0" y1="0" x2="0" y2="1">'
+            '<stop offset="0" stop-color="#fff4c8"/><stop offset=".3" stop-color="#f3d58e"/><stop offset=".55" stop-color="#c99a4c"/>'
+            '<stop offset=".72" stop-color="#8a5d22"/><stop offset=".9" stop-color="#e9c477"/><stop offset="1" stop-color="#fff0bd"/></linearGradient></defs>'
+            f'<g fill="url(#{gradient_id})">{body}</g></svg>')
+
 blocks = {
     "MONOGRAM": monogram(),
     "BISMILLAH": STRINGS["bismillahUthmaniKashida"],
     "VERSE": verse(),
-    "WALID": STRINGS["nameWalid"],
-    "GHITA": STRINGS["nameGhita"],
+    "NAMES": thuluth("names.svg", "names__art", "names-gold"),
+    "KICKER": thuluth("kicker.svg", "kicker__art", "kicker-gold"),
 }
 
 html = (ROOT / "index.html").read_text()

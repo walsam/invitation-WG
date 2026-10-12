@@ -8,12 +8,11 @@ UID:walid-ghita-20261024@invitation
 DTSTAMP:20260101T000000Z
 DTSTART:20261024T170000Z
 DTEND:20261024T210000Z
-SUMMARY:عقد قران وليد وغيثة — Walid & Ghita
-LOCATION:Marrakech\, Morocco
+SUMMARY:حفل عقد قران وليد وغيثة
+LOCATION:مراكش، المغرب
 URL:https://maps.app.goo.gl/GkqDf6CoxdtT6k8R9
 DESCRIPTION:بكل الحب والفرح، نرحب بكم في حفل عق
- د قران وليد وغيثة — You are warmly invited to celebrate wi
- th Walid and Ghita.
+ د قران وليد وغيثة
 BEGIN:VALARM
 TRIGGER:-P1D
 ACTION:DISPLAY
